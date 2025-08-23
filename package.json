@@ -1,0 +1,30 @@
+{
+  "name": "template-method-pattern",
+  "version": "1.0.0",
+  "description": "Interactive Template Method Design Pattern - House Building Example",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "ts-node main.ts",
+    "demo": "ts-node demo.ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "design-pattern",
+    "template-method",
+    "typescript",
+    "interactive",
+    "console"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0",
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
