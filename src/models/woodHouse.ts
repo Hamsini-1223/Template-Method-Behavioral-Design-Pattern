@@ -1,7 +1,5 @@
-// WoodHouse.ts
-// Simple wood house implementation
-
-import { HouseBuilder } from "./HouseBuilder";
+// src/models/woodHouse.ts
+import { HouseBuilder } from "./houseBuilder";
 
 export class WoodHouse extends HouseBuilder {
   protected buildWalls(): void {

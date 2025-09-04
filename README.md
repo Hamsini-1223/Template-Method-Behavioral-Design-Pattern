@@ -1,49 +1,139 @@
-# Template Method Design Pattern - House Builder
+# Template Method Pattern - House Builder
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-16.0+-green.svg)](https://nodejs.org/)
-[![Built by](https://img.shields.io/badge/Built%20by-Ms%20Hamsini%20S-brightgreen.svg)]()
-
-A TypeScript implementation of the Template Method behavioral design pattern using a house construction example.
+A TypeScript implementation of the Template Method behavioral design pattern demonstrating how to define a skeleton algorithm while allowing subclasses to customize specific steps.
 
 ## Overview
 
-The Template Method pattern defines the skeleton of an algorithm in a base class, allowing subclasses to override specific steps without changing the algorithm's structure.
-
-This project demonstrates the pattern through a house construction company that follows the same building process for all house types while allowing customization of materials and features.
-
-## Project Structure
-
-```
-├── HouseBuilder.ts          # Abstract template class
-├── WoodHouse.ts            # Wood house implementation
-├── BrickHouse.ts           # Brick house implementation
-├── LuxuryHouse.ts          # Luxury house implementation
-├── ConstructionCompany.ts   # Business logic coordinator
-├── main.ts                 # Interactive console application
-├── demo.ts                 # Simple demonstration
-├── package.json            # Dependencies and scripts
-└── tsconfig.json          # TypeScript configuration
-```
+The Template Method pattern defines the skeleton of an algorithm in a base class, allowing subclasses to override specific steps without changing the algorithm's structure. This implementation uses a house construction process where all house types follow the same building steps but with customized implementations.
 
 ## Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/template-method-house-builder.git
-cd template-method-house-builder
-
-# Install dependencies
 npm install
-
-# Run interactive version
-npm run dev
-
-# Or run simple demo
-npm run demo
+npm run dev    # Interactive mode
+npm run demo   # Simple demonstration
 ```
 
-## Usage
+## Project Structure
+
+```
+├── src/
+│   ├── models/
+│   │   ├── houseBuilder.ts           # Abstract base (Template Method pattern)
+│   │   ├── woodHouse.ts              # Concrete: builds a wood house
+│   │   ├── brickHouse.ts             # Concrete: builds a brick house
+│   │   └── luxuryHouse.ts            # Concrete: builds a luxury house
+│   │
+│   ├── services/
+│   │   └── constructionCompany.ts    # Factory + orchestrates house construction
+│   │
+│   ├── main.ts                       # Interactive CLI app (user chooses house type)
+│   └── demo.ts                       # Quick demo / test run (non-interactive)
+│
+├── README.md                         # Documentation
+├── package.json                      # Project dependencies & scripts
+└── tsconfig.json                     # TypeScript configuration
+
+```
+
+## Pattern Implementation
+
+### Core Template Method
+
+The `HouseBuilder` abstract class defines the template method that all house types must follow:
+
+```typescript
+abstract class HouseBuilder {
+  // Template Method - defines the algorithm skeleton
+  public buildHouse(): void {
+    this.layFoundation(); // Common implementation
+    this.buildWalls(); // Abstract - must be implemented
+    this.installRoof(); // Common implementation
+    this.paintHouse(); // Abstract - must be implemented
+    this.addFinalTouches(); // Hook method - optional override
+  }
+
+  // Common steps implemented in base class
+  private layFoundation(): void {
+    console.log("1. Laying foundation...");
+  }
+
+  private installRoof(): void {
+    console.log("3. Installing roof...");
+  }
+
+  // Abstract methods - subclasses must implement
+  protected abstract buildWalls(): void;
+  protected abstract paintHouse(): void;
+
+  // Hook method - subclasses can override
+  protected addFinalTouches(): void {
+    console.log("5. Basic cleanup done.");
+  }
+}
+```
+
+### Concrete Implementations
+
+Each house type implements the abstract methods differently:
+
+**Wood House:**
+
+```typescript
+export class WoodHouse extends HouseBuilder {
+  protected buildWalls(): void {
+    console.log("2. Building wooden walls with timber");
+  }
+
+  protected paintHouse(): void {
+    console.log("4. Painting with brown wood stain");
+  }
+  // Uses default addFinalTouches()
+}
+```
+
+**Brick House:**
+
+```typescript
+export class BrickHouse extends HouseBuilder {
+  protected buildWalls(): void {
+    console.log("2. Building walls with red bricks");
+  }
+
+  protected paintHouse(): void {
+    console.log("4. No painting needed - natural brick color");
+  }
+
+  // Overrides hook method
+  protected addFinalTouches(): void {
+    console.log("5. Adding brick house chimney");
+    console.log("6. Installing brick garden path");
+  }
+}
+```
+
+**Luxury House:**
+
+```typescript
+export class LuxuryHouse extends HouseBuilder {
+  protected buildWalls(): void {
+    console.log("2. Building walls with marble and glass");
+  }
+
+  protected paintHouse(): void {
+    console.log("4. Applying premium white paint");
+  }
+
+  // Extensive customization of hook method
+  protected addFinalTouches(): void {
+    console.log("5. Installing swimming pool");
+    console.log("6. Adding gold door handles");
+    console.log("7. Landscaping with exotic plants");
+  }
+}
+```
+
+## Usage Examples
 
 ### Interactive Mode
 
@@ -51,7 +141,11 @@ npm run demo
 npm run dev
 ```
 
-Provides a console menu to build different house types and view statistics.
+This launches an interactive CLI where you can:
+
+- Build different house types
+- View house type descriptions
+- See construction statistics
 
 ### Demo Mode
 
@@ -59,113 +153,7 @@ Provides a console menu to build different house types and view statistics.
 npm run demo
 ```
 
-Demonstrates all house types in sequence without user interaction.
-
-### Build and Run
-
-```bash
-npm run build
-npm start
-```
-
-## House Types
-
-| Type   | Materials                       | Features                        |
-| ------ | ------------------------------- | ------------------------------- |
-| Wood   | Timber walls, wood stain        | Basic design                    |
-| Brick  | Red brick walls, natural finish | Chimney, garden path            |
-| Luxury | Marble walls, premium paint     | Pool, gold handles, landscaping |
-
-## Pattern Implementation
-
-### Template Method Structure
-
-```typescript
-abstract class HouseBuilder {
-  // Template method - defines algorithm skeleton
-  public buildHouse(): void {
-    this.layFoundation(); // Same for all
-    this.buildWalls(); // Different for each type
-    this.installRoof(); // Same for all
-    this.paintHouse(); // Different for each type
-    this.addFinalTouches(); // Optional customization
-  }
-
-  // Concrete methods
-  private layFoundation(): void {
-    /* implementation */
-  }
-  private installRoof(): void {
-    /* implementation */
-  }
-
-  // Abstract methods - must be implemented
-  protected abstract buildWalls(): void;
-  protected abstract paintHouse(): void;
-
-  // Hook method - can be overridden
-  protected addFinalTouches(): void {
-    /* default */
-  }
-}
-```
-
-### Key Components
-
-- **Template Method**: `buildHouse()` defines the construction algorithm
-- **Concrete Methods**: Common steps shared by all house types
-- **Abstract Methods**: Steps that must be customized by each house type
-- **Hook Methods**: Optional customization points
-
-## Sample Output
-
-### Interactive Mode Output
-
-```
-🏗️ ===============================================
-    WELCOME TO HOUSE CONSTRUCTION COMPANY
-===============================================
-We build houses using our proven construction process!
-Choose your house type and watch us build it step by step.
-
-🏠 MAIN MENU
-=============
-1. Build a Wood House 🌳
-2. Build a Brick House 🧱
-3. Build a Luxury House ✨
-4. View Available House Types 📋
-5. View Building Statistics 📊
-6. Exit 🚪
-
-Choose an option (1-6): 2
-
-🏗️ BUILDING A BRICK HOUSE
-========================================
-Are you sure you want to build a brick house? (y/n): y
-
-🚀 Starting construction...
-
-🏗️ Building a BRICK house:
-===================================
-📋 Using our standard construction template...
-
-🏗️ Starting house construction...
-
-1. Laying foundation...
-2. Building walls with red bricks
-3. Installing roof...
-4. No painting needed - natural brick color
-5. Adding brick house chimney
-6. Installing brick garden path
-✅ House completed!
-
-✅ BRICK house construction completed!
-🎯 Another successful build using our proven template!
-
-🎊 Congratulations! Your house is ready!
-
-Press Enter to continue...
-```
+## Expected Output
 
 ### Demo Mode Output
 
@@ -173,11 +161,11 @@ Press Enter to continue...
 🏠 TEMPLATE METHOD PATTERN DEMO
 ================================
 
-Building different house types using the SAME construction template:
+Building different house types using the same construction template:
 
 🏗️ Building a WOOD house:
 ===================================
-📋 Using our standard construction template...
+📋 Using standard construction template...
 
 🏗️ Starting house construction...
 
@@ -189,13 +177,13 @@ Building different house types using the SAME construction template:
 ✅ House completed!
 
 ✅ WOOD house construction completed!
-🎯 Another successful build using our proven template!
+🎯 Construction successful!
 
 ==================================================
 
 🏗️ Building a BRICK house:
 ===================================
-📋 Using our standard construction template...
+📋 Using standard construction template...
 
 🏗️ Starting house construction...
 
@@ -208,13 +196,13 @@ Building different house types using the SAME construction template:
 ✅ House completed!
 
 ✅ BRICK house construction completed!
-🎯 Another successful build using our proven template!
+🎯 Construction successful!
 
 ==================================================
 
 🏗️ Building a LUXURY house:
 ===================================
-📋 Using our standard construction template...
+📋 Using standard construction template...
 
 🏗️ Starting house construction...
 
@@ -228,121 +216,82 @@ Building different house types using the SAME construction template:
 ✅ House completed!
 
 ✅ LUXURY house construction completed!
-🎯 Another successful build using our proven template!
+🎯 Construction successful!
 
 🎯 KEY TAKEAWAY:
-All houses follow the SAME building process:
-1. Foundation → 2. Walls → 3. Roof → 4. Paint → 5. Final touches
-But each house type customizes the materials and finishes!
-
-✨ This is the Template Method Pattern in action!
-🚀 Run 'npm run dev' for the interactive version!
+All houses follow the same building process with customized implementations.
+This demonstrates the Template Method Pattern in action!
 ```
 
-### House Types Information Output
+### Interactive Mode Sample Session
 
 ```
+🏗️ HOUSE CONSTRUCTION COMPANY
+===============================
+Professional house building using proven construction methods.
+
+🏠 MAIN MENU
+=============
+1. Build Wood House
+2. Build Brick House
+3. Build Luxury House
+4. View House Types
+5. View Statistics
+6. Exit
+
+Choose option (1-6): 4
+
 🏠 AVAILABLE HOUSE TYPES
 =========================
 
-🌳 WOOD HOUSE
-   • Materials: Timber walls
-   • Finish: Brown wood stain
-   • Features: Basic and cozy
-   • Price: $ (Budget-friendly)
+WOOD HOUSE
+  • Materials: Timber walls
+  • Features: Basic design
+  • Price: $
 
-🧱 BRICK HOUSE
-   • Materials: Red brick walls
-   • Finish: Natural brick color
-   • Features: Chimney + garden path
-   • Price: $ (Mid-range)
+BRICK HOUSE
+  • Materials: Red brick walls
+  • Features: Chimney, garden path
+  • Price: $$
 
-✨ LUXURY HOUSE
-   • Materials: Marble and glass
-   • Finish: Premium white paint
-   • Features: Pool + gold handles + landscaping
-   • Price: $$ (Premium)
+LUXURY HOUSE
+  • Materials: Marble walls
+  • Features: Pool, premium finishes
+  • Price: $$$
 
-💡 All houses follow the same construction process:
-   Foundation → Walls → Roof → Paint → Final touches
+All houses follow the same construction process.
 ```
 
-### Statistics Output
+## Key Pattern Benefits
 
-```
-📊 CONSTRUCTION STATISTICS
-===========================
+1. **Code Reuse**: Common steps (foundation, roof) are implemented once in the base class
+2. **Consistency**: All house types follow the same construction sequence
+3. **Flexibility**: Each house type can customize specific steps (walls, painting, finishing)
+4. **Extensibility**: New house types can be added easily by extending the base class
+5. **Maintainability**: Algorithm structure is centralized and protected from modification
 
-🏠 Total houses built: 3
-🏗️ Construction method: Template Method Pattern
-⚡ All houses follow the same proven process
-🎯 100% success rate with our construction template!
+## Pattern Structure
 
-🏆 Wow! You're becoming a construction expert!
-```
+- **Template Method** (`buildHouse()`): Defines the algorithm skeleton
+- **Primitive Operations** (`buildWalls()`, `paintHouse()`): Abstract methods that subclasses must implement
+- **Concrete Operations** (`layFoundation()`, `installRoof()`): Common implementations in base class
+- **Hook Methods** (`addFinalTouches()`): Optional methods that subclasses can override
 
-## Extending the Pattern
+## Scripts
 
-To add a new house type:
-
-1. Create a new class extending `HouseBuilder`:
-
-```typescript
-export class StoneHouse extends HouseBuilder {
-  protected buildWalls(): void {
-    console.log("2. Building walls with natural stone");
-  }
-
-  protected paintHouse(): void {
-    console.log("4. Applying stone sealer");
-  }
-}
-```
-
-2. Register it in `ConstructionCompany`:
-
-```typescript
-if (houseType === "stone") {
-  builder = new StoneHouse();
-}
-```
-
-## Available Scripts
-
-| Command         | Description                 |
-| --------------- | --------------------------- |
-| `npm run dev`   | Run interactive application |
-| `npm run demo`  | Run simple demonstration    |
-| `npm run build` | Compile TypeScript          |
-| `npm start`     | Run compiled code           |
-| `npm run clean` | Remove build files          |
-
-## Pattern Benefits
-
-- **Code Reuse**: Common construction steps are centralized
-- **Consistency**: All houses follow the same building process
-- **Flexibility**: Easy to add new house types
-- **Maintainability**: Algorithm changes in one location
-- **Polymorphism**: Same interface works with all implementations
+| Command         | Description             |
+| --------------- | ----------------------- |
+| `npm run dev`   | Interactive application |
+| `npm run demo`  | Simple demonstration    |
+| `npm run build` | Compile TypeScript      |
+| `npm start`     | Run compiled code       |
+| `npm run clean` | Remove build directory  |
 
 ## Requirements
 
-- Node.js 16.0 or higher
-- TypeScript 5.0 or higher
+- Node.js 16.0+
+- TypeScript 5.0+
 
-## Author
+## Built By
 
-Built by **Ms Hamsini S**
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## Acknowledgments
-
-Based on the Template Method design pattern from "Design Patterns: Elements of Reusable Object-Oriented Software" by the Gang of Four.
-
-**Template Method Pattern Implementation by Ms Hamsini S**
+Ms Hamsini S

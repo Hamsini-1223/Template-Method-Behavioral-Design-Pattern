@@ -1,7 +1,5 @@
-// LuxuryHouse.ts
-// Fancy house with extra features
-
-import { HouseBuilder } from "./HouseBuilder";
+// src/models/luxuryHouse.ts
+import { HouseBuilder } from "./houseBuilder";
 
 export class LuxuryHouse extends HouseBuilder {
   protected buildWalls(): void {
@@ -12,7 +10,6 @@ export class LuxuryHouse extends HouseBuilder {
     console.log("4. Applying premium white paint");
   }
 
-  // Luxury house gets lots of extra features
   protected addFinalTouches(): void {
     console.log("5. Installing swimming pool");
     console.log("6. Adding gold door handles");
